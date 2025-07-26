@@ -1,5 +1,5 @@
 import express from "express";
-import Vote from './../models/Vote';
+import Vote from './../models/Vote.js';
 
 
 

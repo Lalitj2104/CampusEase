@@ -10,6 +10,7 @@ import VoteRoute from './routes/VoteRoute.js';
 
 dotenv.config({ path: "./config/.env" });
 
+export const app= express();
 
 app.use(
 	cors({
@@ -34,4 +35,3 @@ app.use("api/v1/complaint", ComplaintRoute);
 app.use("api/v1/category", CategoryRoute);
 app.use("api/v1/vote", VoteRoute);
 
-export const app= express();

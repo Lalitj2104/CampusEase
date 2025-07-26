@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cloudinary": "^2.7.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
@@ -19,6 +20,11 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.4",
     "nodemailer": "^7.0.5",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.7.1",
+    "redux": "^5.0.1",
+    "redux-thunk": "^3.1.0",
+    "tailwindcss": "^4.1.11"
   }
 }

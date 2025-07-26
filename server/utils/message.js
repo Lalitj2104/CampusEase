@@ -27,4 +27,10 @@ export const message={
     usersNotFoundMessage:"Users not found.",
     userDeletedMessage:"User deleted successfully.",
     unauthorizedUserMessage:"Unauthorized user, you do not have permission to perform this action.",
+    complaintCreatedMessage: "Complaint created successfully",
+	complaintsFetchedMessage: "Complaints fetched successfully",
+	complaintFetchedMessage: "Complaint fetched successfully",
+	complaintNotFoundMessage: "Complaint not found",
+	complaintUpdatedMessage: "Complaint updated successfully",
+	complaintDeletedMessage: "Complaint deleted successfully",
 }
