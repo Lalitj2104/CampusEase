@@ -1,11 +1,12 @@
 import express from "express";
-import Vote from './../models/Vote.js';
+import { removeVote, upvoteComplaint } from "../controllers/VotesController.js";
 
 
 
 
 const VoteRoute = express.Router();
 
-
+VoteRoute.post("/upvote",upvoteComplaint);
+VoteRoute.post("/remove",removeVote);
 
 export default VoteRoute;

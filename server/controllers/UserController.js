@@ -5,10 +5,12 @@ import User from "../models/User.js";
 import { message } from "../utils/message.js";
 import { Response } from "../utils/response.js";
 import { sendEMail } from "../middlewares/sendMail.js";
-
+import Vote from './../models/Vote.js';
+import Complaint from './../models/Complaint.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 export  const registerUser= async (req,res)=>{
     try {
@@ -359,7 +361,7 @@ export const resetPassword = async (req, res) => {
 			await user.save();
 			return Response(res, 400, false, message.otpAttemptsExceedMessage);
 		}
-		5;
+
 		if (!otp) {
 			return Response(res, 400, false, message.otpNotFoundMessage);
 		}
@@ -500,6 +502,9 @@ export const deleteUser = async (req, res) => {
         await Complaint.deleteMany({ createdBy: user._id });
 		
 		await Vote.deleteMany({ user: user._id });
+
+		await User.findByIdAndDelete(req.user._id);
+
 
         Response(res, 200, true, message.userDeletedMessage);
     } catch (error) {
