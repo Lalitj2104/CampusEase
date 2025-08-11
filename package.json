@@ -3,7 +3,7 @@
     "dev": "concurrently --names server,client 'cd server && npm run dev' 'cd client && run dev' ",
     "start": "concurrently --names server,client 'cd server && npm run start' 'cd client && npm run start' ",
     "build":"cd client vite build",
-    "ins":"concurrently --names server,client 'cd server && ls && npm i' 'cd client && ls && npm i' "
+    "ins":"concurrently --names server,client 'cd server && npm i' 'cd client && npm i' "
   },
   "dependencies": {
     "concurrently": "^9.2.0"
