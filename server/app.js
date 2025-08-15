@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 
-app.use("api/v1/user", UserRoute);
+app.use("/api/v1/user", UserRoute);
 app.use("api/v1/response", ResponseRoute);
 app.use("api/v1/complaint", ComplaintRoute);
 app.use("api/v1/category", CategoryRoute);

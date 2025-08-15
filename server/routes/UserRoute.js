@@ -9,7 +9,7 @@ const UserRoute = express.Router();
 
 UserRoute.post("/register",registerUser);
 UserRoute.post("/login",loginUser);
-UserRoute.post("/very/:id",verifyUser);
+UserRoute.post("/verify/:id",verifyUser);
 UserRoute.get("/resend/:id",resendOtp);
 UserRoute.post("/forgot",forgetPassword);
 UserRoute.post("/reset/:id",resetPassword);

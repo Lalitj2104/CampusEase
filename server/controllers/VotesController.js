@@ -1,7 +1,7 @@
-import Vote from "../models/voteModel.js";
-import Complaint from "../models/complaintModel.js";
-import Response from "../utils/response.js";
-import message from "../utils/message.js";
+import Vote from "../models/Vote.js";
+import Complaint from "../models/Complaint.js";
+import {Response} from "../utils/response.js";
+import {message} from "../utils/message.js";
 
 export const upvoteComplaint = async (req, res) => {
 	try {

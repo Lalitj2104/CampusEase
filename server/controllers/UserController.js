@@ -5,8 +5,8 @@ import User from "../models/User.js";
 import { message } from "../utils/message.js";
 import { Response } from "../utils/response.js";
 import { sendEMail } from "../middlewares/sendMail.js";
-import Vote from './../models/Vote.js';
-import Complaint from './../models/Complaint.js';
+import Vote from '../models/Vote.js';
+import Complaint from "../models/Complaint.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

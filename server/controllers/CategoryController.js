@@ -1,6 +1,6 @@
-import Category from "../models/categoryModel.js";
+import Category from "../models/category.js";
 import { Response } from "../utils/response.js";
-import message from "../utils/message.js";
+import {message} from "../utils/message.js";
 
 export const createCategory = async (req, res) => {
 	try {

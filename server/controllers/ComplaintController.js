@@ -1,6 +1,6 @@
-import Complaint from "../models/complaintModel.js";
-import Response from "../utils/response.js";
-import message from "../utils/message.js";
+import Complaint from "../models/Complaint.js";
+import {Response} from "../utils/response.js";
+import {message} from "../utils/message.js";
 
 export const createComplaint = async (req, res) => {
 	try {

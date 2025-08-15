@@ -1,7 +1,7 @@
-import ResponseModel from "../models/responseModel.js";
-import Complaint from "../models/complaintModel.js";
-import Response from "../utils/response.js";
-import message from "../utils/message.js";
+import ResponseModel from "../models/response.js";
+import Complaint from "../models/Complaint.js";
+import {Response} from "../utils/response.js";
+import {message} from "../utils/message.js";
 
 export const addResponse = async (req, res) => {
 	try {
