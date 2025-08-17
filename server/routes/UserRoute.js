@@ -14,7 +14,7 @@ UserRoute.get("/resend/:id",resendOtp);
 UserRoute.post("/forgot",forgetPassword);
 UserRoute.post("/reset/:id",resetPassword);
 UserRoute.post("/changepassword/:id",changePassword);
-UserRoute.get("/logout",logoutUser);
+UserRoute.post("/logout",logoutUser);
 UserRoute.get("/me",getUserProfile);
 UserRoute.put("/update",updateUserProfile);
 UserRoute.get("/all",getAllUsers);
