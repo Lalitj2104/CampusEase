@@ -5,8 +5,8 @@ const ComplaintRoute = express.Router();
 
 ComplaintRoute.post("/create",createComplaint);
 ComplaintRoute.get("/all",getAllComplaints);
-ComplaintRoute.get("/:id",getComplaintById);
 ComplaintRoute.get("/my",getMyComplaints);
+ComplaintRoute.get("/:id",getComplaintById);
 ComplaintRoute.put("/update/:id",updateComplaint);
 ComplaintRoute.delete("/delete/:id",deleteComplaint);
 ComplaintRoute.put("/status/:id",markComplaintResolved);

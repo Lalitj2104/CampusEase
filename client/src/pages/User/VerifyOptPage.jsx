@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Mail, Shield, CheckCircle, RefreshCw, ArrowLeft, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const VerifyOtpPage = () => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -24,7 +25,8 @@ const VerifyOtpPage = () => {
       return () => clearTimeout(timer);
     }
   }, [timeLeft, isVerified]);
-
+  
+  const navigate=useNavigate();
   // Auto-focus first input on mount
   useEffect(() => {
     if (inputRefs.current[0]) {
@@ -98,12 +100,10 @@ const VerifyOtpPage = () => {
       
       // Mock validation - replace with actual API response handling
       if (otpValue === '123456') {
+
         setIsVerified(true);
         // Redirect to login or dashboard after successful verification
-        setTimeout(() => {
-          alert('Account verified successfully! Redirecting to login...');
-          // window.location.href = '/login';
-        }, 2000);
+        
       } else {
         setError('Invalid verification code. Please try again.');
         // Clear OTP inputs
@@ -118,7 +118,18 @@ const VerifyOtpPage = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+    
+}
+useEffect(() => {
+  if (isVerified) {
+    const timer = setTimeout(() => {
+      navigate("/dashboard");
+    }, 1000); // 1 second delay
+    return () => clearTimeout(timer);
+  }
+}, [isVerified, navigate]);
+
+
 
   const handleResendOtp = async () => {
     if (isResending || timeLeft > 540) return; // Prevent spam (allow resend only after 1 minute)
@@ -165,7 +176,7 @@ const VerifyOtpPage = () => {
             <div className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg">
               <div className="flex items-center justify-center">
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                Redirecting to login...
+                Redirecting to dashboard...
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import Complaint from "../models/Complaint.js";
 import {Response} from "../utils/response.js";
 import {message} from "../utils/message.js";
+import cloudinary from "cloudinary";
 
 export const createComplaint = async (req, res) => {
 	try {
@@ -122,16 +123,19 @@ export const deleteComplaint = async (req, res) => {
 export const markComplaintResolved = async (req, res) => {
 	try {
 		const { id } = req.params;
-
+		const {status} =req.body;
+		if(!status){
+			return Response(res, 400, false, "Status is required");
+		}
 		const complaint = await Complaint.findById(id);
 		if (!complaint) {
 			return Response(res, 404, false, message.complaintNotFoundMessage);
 		}
 
-		complaint.status = "resolved";
+		complaint.status = status;
 		await complaint.save();
 
-		Response(res, 200, true, "Complaint marked as resolved");
+		Response(res, 200, true, `Complaint marked as ${status}`,complaint);
 	} catch (error) {
 		Response(res, 500, false, error.message);
 	}
