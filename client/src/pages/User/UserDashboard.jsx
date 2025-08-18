@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Plus, 
   ThumbsUp, 
@@ -133,7 +134,7 @@ const UserDashboardPage = () => {
   const [showRaiseComplaint, setShowRaiseComplaint] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState(null);
-
+  const navigate=useNavigate();
   // New complaint form data
   const [newComplaint, setNewComplaint] = useState({
     title: '',
@@ -333,7 +334,7 @@ const UserDashboardPage = () => {
   const handleProfileAction = (action) => {
     setShowProfileDropdown(false);
     if (action === 'profile') {
-      alert('My Profile clicked - This would navigate to profile page');
+      navigate('/profile'); 
     } else if (action === 'logout') {
       alert('Logout clicked - This would log the user out');
     }
