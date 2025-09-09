@@ -1,40 +1,35 @@
-import Vote from "../models/Vote.js";
 import Complaint from "../models/Complaint.js";
-import {Response} from "../utils/response.js";
-import {message} from "../utils/message.js";
+import Vote from "../models/Vote.js";
+import { Response } from "../utils/response.js";
 
-export const upvoteComplaint = async (req, res) => {
+export const toggleVote = async (req, res) => {
 	try {
 		const { complaintId } = req.body;
 		const userId = req.user._id;
 
-		const existing = await Vote.findOne({ complaint: complaintId, user: userId });
-		if (existing) {
-			return Response(res, 400, false, "You already upvoted this complaint");
+		// Check if vote already exists
+		const existingVote = await Vote.findOne({
+			complaint: complaintId,
+			user: userId,
+		});
+
+		if (existingVote) {
+			// Remove vote
+			await Vote.findByIdAndDelete(existingVote._id);
+			await Complaint.findByIdAndUpdate(complaintId, {
+				$pull: { upvotes: userId },
+			});
+
+			return Response(res, 200, true, "Vote removed");
+		} else {
+			// Add vote
+			const vote = await Vote.create({ user: userId, complaint: complaintId });
+			await Complaint.findByIdAndUpdate(complaintId, {
+				$push: { upvotes: userId },
+			});
+
+			return Response(res, 201, true, "Complaint upvoted", vote);
 		}
-
-		const vote = await Vote.create({ user: userId, complaint: complaintId });
-		await Complaint.findByIdAndUpdate(complaintId, { $push: { upvotes: userId } });
-
-		Response(res, 201, true, "Complaint upvoted", vote);
-	} catch (error) {
-		Response(res, 500, false, error.message);
-	}
-};
-
-export const removeVote = async (req, res) => {
-	try {
-		const { complaintId } = req.body;
-		const userId = req.user._id;
-
-		const vote = await Vote.findOneAndDelete({ complaint: complaintId, user: userId });
-		if (!vote) {
-			return Response(res, 404, false, "Vote not found");
-		}
-
-		await Complaint.findByIdAndUpdate(complaintId, { $pull: { upvotes: userId } });
-
-		Response(res, 200, true, "Vote removed");
 	} catch (error) {
 		Response(res, 500, false, error.message);
 	}

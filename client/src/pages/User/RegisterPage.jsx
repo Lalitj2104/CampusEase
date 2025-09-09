@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Eye,
 	EyeOff,
@@ -10,6 +10,8 @@ import {
 	UserPlus,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch,useSelector } from 'react-redux';
+import { registerUser } from "../../redux/Actions/userAction";
 
 const RegisterPage = () => {
 	const [formData, setFormData] = useState({
@@ -25,7 +27,8 @@ const RegisterPage = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [errors, setErrors] = useState({});
 	const navigate=useNavigate();
-	
+	const dispatch=useDispatch();
+	const { loading, message, error, id, isAuthenticated } = useSelector((state) => state.user);
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({
@@ -68,9 +71,8 @@ const RegisterPage = () => {
 		setIsLoading(true);
 		setErrors({});
 		try {
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			console.log("Registration data:", formData);
-			navigate("/verify")
+			dispatch(registerUser(formData));
+			
 		} catch (error) {
 			console.error("Registration failed:", error);
 			setErrors({ submit: "Registration failed. Please try again." });
@@ -78,6 +80,12 @@ const RegisterPage = () => {
 			setIsLoading(false);
 		}
 	};
+	useEffect(()=>{
+		if(message=="User created successfully, please verify your email."){
+			dispatch({type:"CLEAR_MESSAGE"});
+			navigate("/verify");
+		}
+	},[message]);
 
 	const inputClasses =
 		"w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm";
@@ -282,9 +290,9 @@ const RegisterPage = () => {
 						<button
 							type="submit"
 							className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg cursor-pointer"
-							disabled={isLoading}
+							disabled={loading}
 						>
-							{isLoading ? (
+							{loading ? (
 								<div className="flex items-center justify-center">
 									<div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
 									Creating Account...

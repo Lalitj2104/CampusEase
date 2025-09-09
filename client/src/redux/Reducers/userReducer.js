@@ -77,7 +77,7 @@ export const userReducer = createReducer(initialState, (builder) => {
 		.addCase(userRegisterSuccess, (state, action) => {
 			state.loading = false;
 			state.message = action.payload.message;
-			state.id = action.payload.id;
+			state.user = action.payload.data;
 		})
 		.addCase(userRegisterFailure, (state, action) => {
 			state.loading = false;
@@ -89,7 +89,8 @@ export const userReducer = createReducer(initialState, (builder) => {
 		})
 		.addCase(RegisterOtpSuccess, (state, action) => {
 			state.loading = false;
-			state.message = action.payload;
+			state.message = action.payload.message;
+			state.user = action.payload.data;
 			state.isAuthenticated = true;
 		})
 		.addCase(RegisterOtpFailure, (state, action) => {

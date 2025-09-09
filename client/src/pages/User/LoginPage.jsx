@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, LogIn, AlertCircle } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Eye, EyeOff, Mail, Lock, LogIn, AlertCircle, ClockFading } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../redux/Actions/userAction';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -8,10 +11,20 @@ const LoginPage = () => {
   });
   
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [rememberMe, setRememberMe] = useState(false);
-
+  const dispatch=useDispatch();
+  const navigate=useNavigate();
+  
+  const {message,loading,error}=useSelector((state)=>state.user);
+  useEffect(()=>{
+    if(message=="Login successful."){
+      navigate("/dashboard");
+      dispatch({type:"CLEAR_MESSAGE"});
+    }
+  },[message])
+  // console.log(message);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -48,38 +61,11 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-    
-    setIsLoading(true);
-    setErrors({});
-    
-    try {
-      // Simulate API call - replace with your actual API endpoint
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      console.log('Login data:', { ...formData, rememberMe });
-      
-      // Handle successful login here
-      alert('Login successful! Redirecting to dashboard...');
-      // Redirect logic would go here
-      
-    } catch (error) {
-      console.error('Login failed:', error);
-      setErrors({ 
-        submit: 'Invalid email or password. Please try again.' 
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    dispatch(loginUser(formData));
   };
 
   const handleForgotPassword = () => {
-    // Handle forgot password logic
-    alert('Forgot password functionality would be implemented here');
+    navigate("/forgot");
   };
 
   const inputClasses = "w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm";
@@ -199,10 +185,10 @@ const LoginPage = () => {
             <div
               onClick={handleSubmit}
               className={`w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg cursor-pointer ${
-                isLoading ? 'opacity-50 cursor-not-allowed transform-none' : ''
+                loading ? 'opacity-50 cursor-not-allowed transform-none' : ''
               }`}
             >
-              {isLoading ? (
+              {loading ? (
                 <div className="flex items-center justify-center">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
                   Signing in...

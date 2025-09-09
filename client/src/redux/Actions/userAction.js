@@ -48,7 +48,7 @@ export const registerUser = (details) => async (dispatch) => {
 			type: "USER_REGISTER_SUCCESS",
 			payload: {
 				message: data.message,
-				id: data.data._id,
+				data: data.data,
 			},
 		});
 	} catch (error) {
@@ -76,7 +76,9 @@ export const verifyRegisterOtp = (id, otp) => async (dispatch) => {
 		);
 		dispatch({
 			type: "REGISTER_OTP_SUCCESS",
-			payload: data.message,
+			payload:{
+				data:data.data,
+				message:data.message},
 		});
 	} catch (error) {
 		dispatch({
