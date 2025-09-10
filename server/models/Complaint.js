@@ -14,7 +14,7 @@ const complaintSchema = new mongoose.Schema(
 		},
 		title: { type: String, required: true },
 		description: { type: String, required: true },
-		category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
+		category: {type:String},
 		status: {
 			type: String,
 			enum: ["pending", "in progress", "resolved"],

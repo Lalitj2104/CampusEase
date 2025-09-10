@@ -3,6 +3,7 @@ import { Eye, EyeOff, Mail, Lock, LogIn, AlertCircle, ClockFading } from 'lucide
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../redux/Actions/userAction';
+import { getAllComplaints } from '../../redux/Actions/complaintAction';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -20,6 +21,7 @@ const LoginPage = () => {
   const {message,loading,error}=useSelector((state)=>state.user);
   useEffect(()=>{
     if(message=="Login successful."){
+          dispatch(getAllComplaints());
       navigate("/dashboard");
       dispatch({type:"CLEAR_MESSAGE"});
     }

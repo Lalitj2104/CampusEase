@@ -1,9 +1,10 @@
 import express from 'express';
 import { createComplaint, deleteComplaint, getAllComplaints, getComplaintById, getMyComplaints, markComplaintResolved, updateComplaint } from '../controllers/ComplaintController.js';
+import { isAuthenticated } from './../middlewares/Auth.js';
 
 const ComplaintRoute = express.Router();
 
-ComplaintRoute.post("/create",createComplaint);
+ComplaintRoute.post("/create",isAuthenticated,createComplaint);
 ComplaintRoute.get("/all",getAllComplaints);
 ComplaintRoute.get("/my",getMyComplaints);
 ComplaintRoute.get("/:id",getComplaintById);
