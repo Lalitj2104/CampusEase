@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { 
-  User, 
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser, updateUserProfile } from './../../redux/Actions/userAction';
+import { useNavigate } from 'react-router-dom';
+import { User, 
   Mail, 
   Phone, 
   Building, 
@@ -22,18 +24,8 @@ import {
 
 const UserProfilePage = () => {
   // Mock user data - replace with actual user data from your API/context
-  const [userData, setUserData] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@company.com',
-    department: 'Engineering',
-    phoneNumber: '+1 (555) 123-4567',
-    joinDate: '2023-01-15',
-    location: 'New York, NY',
-    bio: 'Senior Software Engineer with 5+ years of experience in full-stack development.',
-    avatar: null
-  });
-
+  
+  const {id:userData,loading,isAuthenticated } = useSelector((state) => state.user)
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState(userData);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -49,6 +41,8 @@ const UserProfilePage = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const dispatch=useDispatch();
+  const navigate=useNavigate();
 
   const handleEditToggle = () => {
     if (isEditing) {
@@ -100,18 +94,8 @@ const UserProfilePage = () => {
       return;
     }
 
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setUserData(editData);
-      setIsEditing(false);
-      alert('Profile updated successfully!');
-    } catch (error) {
-      alert('Failed to update profile. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+   dispatch(updateUserProfile(editData));
+   navigate("/dashboard")
   };
 
   const handlePasswordUpdate = async () => {
@@ -143,7 +127,12 @@ const UserProfilePage = () => {
       setIsLoading(false);
     }
   };
-
+  const handleLogoutUser=()=>{
+    dispatch(logoutUser());
+    setTimeout(()=>{
+      navigate("/")
+    },500)
+  }
   const handleAvatarUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -171,13 +160,11 @@ const UserProfilePage = () => {
             <div className="absolute -bottom-16 left-8">
               <div className="relative">
                 <div className="w-32 h-32 bg-white rounded-full border-4 border-white shadow-lg overflow-hidden">
-                  {userData.avatar ? (
-                    <img src={userData.avatar} alt="Profile" className="w-full h-full object-cover" />
-                  ) : (
+                   (
                     <div className="w-full h-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
                       <User className="w-16 h-16 text-white" />
                     </div>
-                  )}
+                  )
                 </div>
                 <label htmlFor="avatar-upload" className="absolute bottom-2 right-2 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full cursor-pointer transition-colors shadow-lg">
                   <Camera className="w-4 h-4" />
@@ -193,7 +180,7 @@ const UserProfilePage = () => {
             </div>
             <div className="absolute top-4 right-4 flex space-x-2">
               <div className="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm">
-                Member since {new Date(userData.joinDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+                Member since {new Date(userData?.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
               </div>
             </div>
           </div>
@@ -202,17 +189,17 @@ const UserProfilePage = () => {
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                  {userData.firstName} {userData.lastName}
+                  {userData?.firstName} {userData?.lastName}
                 </h1>
                 <div className="flex items-center text-gray-600 mb-2">
                   <Building className="w-4 h-4 mr-2" />
-                  {userData.department}
+                  {userData?.department}
                 </div>
                 <div className="flex items-center text-gray-600 mb-4">
                   <MapPin className="w-4 h-4 mr-2" />
-                  {userData.location}
+                  {userData?.location}
                 </div>
-                <p className="text-gray-700 max-w-2xl">{userData.bio}</p>
+                <p className="text-gray-700 max-w-2xl">{userData?.bio}</p>
               </div>
               
               <div className="flex space-x-2">
@@ -250,7 +237,7 @@ const UserProfilePage = () => {
                       type="text"
                       id="firstName"
                       name="firstName"
-                      value={isEditing ? editData.firstName : userData.firstName}
+                      value={isEditing ? editData.firstName : userData?.firstName}
                       onChange={handleInputChange}
                       disabled={!isEditing}
                       className={`${inputClasses} ${!isEditing ? 'bg-gray-50' : ''} ${errors.firstName ? 'border-red-500' : ''}`}
@@ -264,7 +251,7 @@ const UserProfilePage = () => {
                       type="text"
                       id="lastName"
                       name="lastName"
-                      value={isEditing ? editData.lastName : userData.lastName}
+                      value={isEditing ? editData.lastName : userData?.lastName}
                       onChange={handleInputChange}
                       disabled={!isEditing}
                       className={`${inputClasses} ${!isEditing ? 'bg-gray-50' : ''} ${errors.lastName ? 'border-red-500' : ''}`}
@@ -280,7 +267,7 @@ const UserProfilePage = () => {
                     type="email"
                     id="email"
                     name="email"
-                    value={isEditing ? editData.email : userData.email}
+                    value={isEditing ? editData.email : userData?.email}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`${inputClasses} ${!isEditing ? 'bg-gray-50' : ''} ${errors.email ? 'border-red-500' : ''}`}
@@ -295,7 +282,7 @@ const UserProfilePage = () => {
                     <select
                       id="department"
                       name="department"
-                      value={isEditing ? editData.department : userData.department}
+                      value={isEditing ? editData.department : userData?.department}
                       onChange={handleInputChange}
                       disabled={!isEditing}
                       className={`${inputClasses} ${!isEditing ? 'bg-gray-50' : ''}`}
@@ -317,7 +304,7 @@ const UserProfilePage = () => {
                       type="tel"
                       id="phoneNumber"
                       name="phoneNumber"
-                      value={isEditing ? editData.phoneNumber : userData.phoneNumber}
+                      value={isEditing ? editData.phoneNumber : userData?.phoneNumber}
                       onChange={handleInputChange}
                       disabled={!isEditing}
                       className={`${inputClasses} ${!isEditing ? 'bg-gray-50' : ''} ${errors.phoneNumber ? 'border-red-500' : ''}`}
@@ -333,7 +320,7 @@ const UserProfilePage = () => {
                     type="text"
                     id="location"
                     name="location"
-                    value={isEditing ? editData.location : userData.location}
+                    value={isEditing ? editData.location : userData?.location}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`${inputClasses} ${!isEditing ? 'bg-gray-50' : ''}`}
@@ -348,7 +335,7 @@ const UserProfilePage = () => {
                     id="bio"
                     name="bio"
                     rows={4}
-                    value={isEditing ? editData.bio : userData.bio}
+                    value={isEditing ? editData.Bio : userData?.bio}
                     onChange={handleInputChange}
                     disabled={!isEditing}
                     className={`${inputClasses} ${!isEditing ? 'bg-gray-50' : ''} resize-none`}
@@ -362,10 +349,10 @@ const UserProfilePage = () => {
                     <div
                       onClick={handleSave}
                       className={`flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg transition-all duration-200 cursor-pointer ${
-                        isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                        loading ? 'opacity-50 cursor-not-allowed' : ''
                       }`}
                     >
-                      {isLoading ? (
+                      {loading ? (
                         <>
                           <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
                           Saving...
@@ -394,21 +381,21 @@ const UserProfilePage = () => {
                     <Calendar className="w-4 h-4 text-blue-600 mr-2" />
                     <span className="text-sm text-gray-600">Member Since</span>
                   </div>
-                  <span className="text-sm font-medium">{new Date(userData.joinDate).getFullYear()}</span>
+                  <span className="text-sm font-medium">{new Date(userData?.createdAt).getFullYear()}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Briefcase className="w-4 h-4 text-green-600 mr-2" />
                     <span className="text-sm text-gray-600">Department</span>
                   </div>
-                  <span className="text-sm font-medium">{userData.department}</span>
+                  <span className="text-sm font-medium">{userData?.department}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <MapPin className="w-4 h-4 text-purple-600 mr-2" />
                     <span className="text-sm text-gray-600">Location</span>
                   </div>
-                  <span className="text-sm font-medium">{userData.location}</span>
+                  <span className="text-sm font-medium">{userData?.location}</span>
                 </div>
               </div>
             </div>
@@ -429,10 +416,10 @@ const UserProfilePage = () => {
                   <Shield className="w-5 h-5 text-gray-600 mr-3" />
                   <span className="text-sm font-medium text-gray-700">Privacy & Security</span>
                 </div>
-                <div className="flex items-center p-3 hover:bg-red-50 text-red-600 rounded-lg cursor-pointer transition-colors">
+                <button onClick={handleLogoutUser} className="flex items-center p-3 hover:bg-red-50 text-red-600 rounded-lg cursor-pointer transition-colors">
                   <LogOut className="w-5 h-5 mr-3" />
                   <span className="text-sm font-medium">Sign Out</span>
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -527,10 +514,10 @@ const UserProfilePage = () => {
                 <div
                   onClick={handlePasswordUpdate}
                   className={`flex items-center px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg transition-all duration-200 cursor-pointer ${
-                    isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                    loading ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
-                  {isLoading ? (
+                  {loading ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
                       Updating...

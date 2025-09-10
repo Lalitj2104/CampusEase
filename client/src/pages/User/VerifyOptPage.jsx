@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
 import {
-	Mail,
-	Shield,
-	CheckCircle,
-	RefreshCw,
 	ArrowLeft,
+	CheckCircle,
 	Clock,
+	RefreshCw,
+	Shield
 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import { resendRegisterOtp, verifyRegisterOtp } from "../../redux/Actions/userAction";
-import { is } from "./../../../node_modules/immer/src/utils/common";
 
 const VerifyOtpPage = () => {
 	const [otp, setOtp] = useState(["", "", "", "", "", ""]);

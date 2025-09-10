@@ -5,40 +5,43 @@ import User from "../models/User.js";
 import { message } from "../utils/message.js";
 import { Response } from "../utils/response.js";
 import { sendEMail } from "../middlewares/sendMail.js";
-import Vote from '../models/Vote.js';
+import Vote from "../models/Vote.js";
 import Complaint from "../models/Complaint.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+export const registerUser = async (req, res) => {
+	try {
+		const { firstName, lastName, email, department, phoneNumber, password } =
+			req.body;
 
-export  const registerUser= async (req,res)=>{
-    try {
-        const {firstName,lastName,email,department,phoneNumber,password}=req.body;
+		if (
+			!firstName ||
+			!lastName ||
+			!email ||
+			!department ||
+			!phoneNumber ||
+			!password
+		) {
+			return Response(res, 400, false, message.FieldsRequiredMessage);
+		}
 
+		let user = await User.findOne({ email });
+		if (user) {
+			return Response(res, 400, false, message.userAlreadyExistsMessage);
+		}
 
-        if(!firstName || !lastName || !email || !department || !phoneNumber || !password){
-            return Response(res,400,false,message.FieldsRequiredMessage);
-        }
+		user = await User.create({ ...req.body });
 
-
-        let user =await User.findOne({email});
-        if(user){
-            return Response(res,400,false,message.userAlreadyExistsMessage);
-        }
-
-        user = await User.create({...req.body});
-
-
-        const otp = Math.floor(100000 + Math.random() * 900000);
+		const otp = Math.floor(100000 + Math.random() * 900000);
 		const otpExpire = new Date(Date.now() + 10 * 60 * 1000);
 		user.registerOtp = otp;
 		user.registerOtpExpire = otpExpire;
 
+		await user.save();
 
-        await user.save();
-
-        let emailTemplate = fs.readFileSync(
+		let emailTemplate = fs.readFileSync(
 			path.join(__dirname, "../templates/mail.html"),
 			"utf-8",
 		);
@@ -49,11 +52,11 @@ export  const registerUser= async (req,res)=>{
 		emailTemplate = emailTemplate.replace("{{USER_ID}}", user._id.toString());
 		await sendEMail({ email, subject, html: emailTemplate });
 
-        return Response(res, 200, true, message.userCreatedMessage, user);
-    } catch (error) {
-        return Response(res,500,false,error.message);
-    }
-}
+		return Response(res, 200, true, message.userCreatedMessage, user);
+	} catch (error) {
+		return Response(res, 500, false, error.message);
+	}
+};
 
 export const verifyUser = async (req, res) => {
 	try {
@@ -437,7 +440,7 @@ export const logoutUser = async (req, res) => {
 export const getUserProfile = async (req, res) => {
 	try {
 		if (!req.user) {
-			return Response(res, 400, false,message.userNotFoundMessage);
+			return Response(res, 400, false, message.userNotFoundMessage);
 		}
 		const user = await User.findById(req.user._id);
 		Response(res, 200, true, message.userProfileFoundMessage, user);
@@ -482,14 +485,14 @@ export const getAllUsers = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-    try {
-        const { id } = req.params;
+	try {
+		const { id } = req.params;
 
-        if (!id) {
-            return Response(res, 400, false, message.idNotFoundMessage);
-        }
+		if (!id) {
+			return Response(res, 400, false, message.idNotFoundMessage);
+		}
 
-        if (id.toString() !== req.user._id.toString()) {
+		if (id.toString() !== req.user._id.toString()) {
 			return Response(res, 403, false, message.unauthorizedUserMessage);
 		}
 
@@ -499,15 +502,14 @@ export const deleteUser = async (req, res) => {
 			return Response(res, 404, false, message.userNotFoundMessage);
 		}
 
-        await Complaint.deleteMany({ createdBy: user._id });
-		
+		await Complaint.deleteMany({ createdBy: user._id });
+
 		await Vote.deleteMany({ user: user._id });
 
 		await User.findByIdAndDelete(req.user._id);
 
-
-        Response(res, 200, true, message.userDeletedMessage);
-    } catch (error) {
-        Response(res, 500, false, error.message);
-    }
-}
+		Response(res, 200, true, message.userDeletedMessage);
+	} catch (error) {
+		Response(res, 500, false, error.message);
+	}
+};

@@ -112,9 +112,10 @@ export const forgotUserPassword = (email) => async (dispatch) => {
 		dispatch({
 			type: "FORGOT_USER_PASSWORD_REQUEST",
 		});
+		console.log(email)
 		const { data } = await axios.post(
 			`${URL}/forget`,
-			{ email },
+			 {email} ,
 			{
 				headers: {
 					"Content-Type": "application/json",
@@ -132,7 +133,7 @@ export const forgotUserPassword = (email) => async (dispatch) => {
 	} catch (error) {
 		dispatch({
 			type: "FORGOT_USER_PASSWORD_FAILURE",
-			payload: error?.response?.data?.message|| "Something went wrong",
+			payload: error?.response?.data?.message,
 		});
 	}
 };
@@ -237,7 +238,7 @@ export const updateUserProfile = (userData) => async (dispatch) => {
 	} catch (error) {
 		dispatch({
 			type: "UPDATE_USER_PROFILE_FAILURE",
-			payload: error.response?.data?.message || "Something went wrong",
+			payload: error.response?.data?.message ,
 		});
 	}
 };

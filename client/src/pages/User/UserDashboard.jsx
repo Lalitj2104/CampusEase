@@ -24,15 +24,18 @@ import {
   X,
   Image as ImageIcon
 } from 'lucide-react';
+import { logoutUser } from '../../redux/Actions/userAction';
+import { useDispatch, useSelector } from 'react-redux';
 
 const UserDashboardPage = () => {
   // Mock user data
-  const [currentUser] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    department: 'Engineering',
-    avatar: null
-  });
+  // const [currentUser] = useState({
+  //   firstName: 'John',
+  //   lastName: 'Doe',
+  //   department: 'Engineering',
+  //   avatar: null
+  // });
+  const {id:currentUser,loading,error}=useSelector(state=>state.user);
 
   // Profile dropdown state
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -292,7 +295,7 @@ const UserDashboardPage = () => {
       images: prev.images.filter(img => img.id !== imageId)
     }));
   };
-
+  const dispatch=useDispatch();
   const handleSubmitComplaint = async () => {
     if (!newComplaint.title.trim() || !newComplaint.category || !newComplaint.description.trim()) {
       alert('Please fill in all required fields');
@@ -336,9 +339,16 @@ const UserDashboardPage = () => {
     if (action === 'profile') {
       navigate('/profile'); 
     } else if (action === 'logout') {
-      alert('Logout clicked - This would log the user out');
+        handleLogoutUser();
     }
   };
+
+  const handleLogoutUser=()=>{
+          dispatch(logoutUser());
+          setTimeout(()=>{
+            navigate("/")
+          },500)
+        }
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

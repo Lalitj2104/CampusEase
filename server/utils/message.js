@@ -7,6 +7,7 @@ export const message={
     idNotFoundMessage:"ID not found.",
     userNotFoundMessage:"User not found.",
     userAlreadyVerifiedMessage:"User is already verified.",
+    otpSendMessage:"otp send successfully",
     otpVerifiedMessage:"OTP verified successfully.",
     otpAttemptsExceedMessage:"OTP attempts exceeded, please try again later.",
     otpNotFoundMessage:"OTP not found, please provide a valid OTP.",
